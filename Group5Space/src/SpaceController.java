@@ -22,10 +22,12 @@ public class SpaceController {
 		JButton display1 = display1();
 		JButton display2 = display2();
 		JButton display3 = display3();
+		JButton display4 = display4();
 		
 		mainPanel.add(display1);
 		mainPanel.add(display2);
 		mainPanel.add(display3);
+		mainPanel.add(display4);
 
 		
 		mainFrame.add(mainPanel, BorderLayout.CENTER);
@@ -68,6 +70,19 @@ public class SpaceController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Display3 display = new Display3();
+				
+			}
+		});
+		return display3;
+	}
+	
+	private static JButton display4() {
+		JButton display3 = new JButton("Display 4");
+		display3.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Display4 display = new Display4();
 				
 			}
 		});
