@@ -77,8 +77,8 @@ public class SpaceController {
 	}
 	
 	private static JButton display4() {
-		JButton display3 = new JButton("Display 4");
-		display3.addActionListener(new ActionListener() {
+		JButton display4 = new JButton("Display 4");
+		display4.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -86,7 +86,7 @@ public class SpaceController {
 				
 			}
 		});
-		return display3;
+		return display4;
 	}
 
 }
