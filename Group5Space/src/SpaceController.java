@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 public class SpaceController {
 
+  
 	public static void main(String[] args) {
 		JFrame mainFrame = new JFrame("Space Control");
 		mainFrame.setLayout(new BorderLayout());
@@ -19,7 +20,7 @@ public class SpaceController {
 		mainFrame.setSize(800, 800);
 		mainFrame.setLocationRelativeTo(null);
 
-		JButton display1 = display1();
+		Display1 display1 = new Display1();
 		JButton display2 = display2();
 		JButton display3 = display3();
 		
