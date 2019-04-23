@@ -20,13 +20,15 @@ public class SpaceController {
 		mainFrame.setSize(800, 800);
 		mainFrame.setLocationRelativeTo(null);
 
-		Display1 display1 = new Display1();
+		JButton display1 = display1();
 		JButton display2 = display2();
 		JButton display3 = display3();
+		JButton display4 = display4();
 		
 		mainPanel.add(display1);
 		mainPanel.add(display2);
 		mainPanel.add(display3);
+		mainPanel.add(display4);
 
 		
 		mainFrame.add(mainPanel, BorderLayout.CENTER);
@@ -40,7 +42,7 @@ public class SpaceController {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Display1 display = new Display1();
+				Display1 display1 = new Display1();
 				
 			}
 		});
@@ -73,6 +75,19 @@ public class SpaceController {
 			}
 		});
 		return display3;
+	}
+	
+	private static JButton display4() {
+		JButton display4 = new JButton("Display 4");
+		display4.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Display4 display = new Display4();
+				
+			}
+		});
+		return display4;
 	}
 
 }

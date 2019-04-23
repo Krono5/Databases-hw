@@ -1,4 +1,7 @@
 import javax.swing.*;
+
+import display1Componnent.BuildingsPanel;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -8,14 +11,11 @@ import java.awt.event.*;
  *
  */
 
-public class Display1 extends JPanel {
+public class Display1 extends JFrame  {
   
   //buttons for buildings
-  private JButton factoryButton; 
-  private JButton mineButton; 
-  private JButton researchButton; 
-  private JButton shipyardButton; 
-	
+  private BuildingsPanel buildings; 
+
   //buttons for player and actions
   private JButton playerInfoButton;
   private JButton playerMoneyButton;
@@ -27,34 +27,16 @@ public class Display1 extends JPanel {
 		displayFrame.setSize(800, 800);
 		displayFrame.setLocationRelativeTo(null);
 		// Create a BorderLayout manager.
-    setLayout(new BorderLayout());
-		add(buildingsPanels(), BorderLayout.SOUTH);
-		add(playerPanel(), BorderLayout.NORTH);
-		
-    setVisible(true);
+    displayFrame.setLayout(new BorderLayout());
+    buildings = new BuildingsPanel();
+    displayFrame.add(buildings, BorderLayout.CENTER);
+    displayFrame.add(playerPanel(), BorderLayout.PAGE_START);
+	
+    displayFrame.setVisible(true);
 		
 	}
 	
-	public JPanel buildingsPanels() {
-	  
-	  JPanel panel = new JPanel();
-	  // Create a GridLayout manager with
-    // 2 rows and 2 columns to contain the buttons.
-    setLayout(new GridLayout(2, 2));
-    
-    //create buttons for each building
-	  factoryButton = new JButton("Factory\n1000");
-	  mineButton = new JButton("Mine\n1000");
-	  researchButton = new JButton("Research Center\n1000");
-	  shipyardButton = new JButton("Shipyard\n1000");
-	  
-	  //add buttons to the panel
-	  panel.add(factoryButton);
-	  panel.add(mineButton);
-	  panel.add(researchButton);
-	  panel.add(shipyardButton);
-    return panel;
-	}
+	
 	
 	public JPanel playerPanel() {
 	  
@@ -69,6 +51,9 @@ public class Display1 extends JPanel {
     
     panel.add(playerInfoButton);
     panel.add(playerMoneyButton);
+   
+    setPreferredSize( new Dimension( 640, 480 ) );
+    setResizable( false );
     
     return panel;
 	}

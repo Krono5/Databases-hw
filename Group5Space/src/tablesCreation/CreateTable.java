@@ -58,7 +58,9 @@ public class CreateTable {
  
   public static void main(String[] args) throws Exception {
     
-    String sqlStmt[] = { ""};         
+    String sqlStmt[] = { "INSERT INTO PLAYER(Username, Password, Money, IsBanned, CName)" + 
+        "VALUES ('MinaKindo', 'jesuisgentille', 200000, 0, 'NA')"
+        };         
                         
     for(int i=0; i < sqlStmt.length; i++) {   
       createTable(sqlStmt[i]);
