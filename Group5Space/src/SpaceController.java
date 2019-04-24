@@ -42,7 +42,7 @@ public class SpaceController {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Display1 display1 = new Display1();
+				PlayerInfo display1 = new PlayerInfo();
 				
 			}
 		});

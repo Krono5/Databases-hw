@@ -1,31 +1,32 @@
+package display1Componnent;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 /**
  * 
  * @author aa1184 aka MinaKindo
  *
  */
-public class LoginPage extends JFrame {
+public class Display1 extends JFrame {
   
+
   private JTextField usernameTF;     
-  private JLabel usernameLabel;             
-  private JTextField passwordTF;    
-  private JLabel passwordLabel; 
+  
   private JButton loginButton;
   
   //These three buttons will allow user to 
   //select the right choice
-  private ButtonGroup selection;
-  private JRadioButton playerRB;
-  private JRadioButton adminRB;
-  private JRadioButton newUserRB;
+  
   
   /*
    * this UI will be the first screen a user will see 
    * and allows to get to the DB
    */
-  public LoginPage() {
+  public Display1() {
     // Display a title.
     setTitle("User Login");
     setSize(800, 800);
@@ -45,6 +46,10 @@ public class LoginPage extends JFrame {
   }
   
   public JPanel loginFields() {
+    
+    JLabel usernameLabel;             
+    JTextField passwordTF;    
+    JLabel passwordLabel; 
     JPanel panel = new JPanel();
     
     panel.setLayout(new GridLayout(2,2));
@@ -66,7 +71,13 @@ public class LoginPage extends JFrame {
   }
   
   public JPanel selectionRB() {
+    
     JPanel panel = new JPanel();
+    
+    ButtonGroup selection;
+    JRadioButton playerRB;
+    JRadioButton adminRB;
+    JRadioButton newUserRB;
     
     panel.setLayout(new GridLayout(3,1));
     
@@ -92,8 +103,33 @@ public class LoginPage extends JFrame {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      // TODO Auto-generated method stub
-
+      
+      
+      try {
+        String sql = "SELECT Username FROM PLAYER WHERE Username = ?";
+        String username = usernameTF.getText();
+        PreparedStatement stmt;
+        DBconnect.connector();
+        stmt = DBconnect.m_dbConn.prepareStatement(sql);
+        
+        stmt.setString(1, username);
+        ResultSet rs = stmt.executeQuery();
+        
+        while (rs.next())
+        {
+        // You can access values from a ResultSet either by column number - not advised:
+        username = rs.getString("Username");
+        }
+        
+        
+        System.out.println(username);
+        new PlayerInfo(username);
+      } catch (SQLException e1) {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
+        JOptionPane.showMessageDialog(null, usernameTF.getText() + " does not exist ");
+      }
+        
     }
 
   }

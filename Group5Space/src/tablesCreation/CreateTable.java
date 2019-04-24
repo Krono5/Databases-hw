@@ -1,7 +1,11 @@
 package tablesCreation;
 
 import java.sql.*;
-
+/**
+ * 
+ * @author aa1184 aka MinaKindo
+ *
+ */
 public class CreateTable {
   
 //For a more in-depth tutorial see: https://www.tutorialspoint.com/jdbc/index.htm
@@ -58,7 +62,7 @@ public class CreateTable {
  
   public static void main(String[] args) throws Exception {
     
-    String sqlStmt[] = { "INSERT INTO PLAYER(Username, Password, Money, IsBanned, CName)" + 
+    String sqlStmt[] = { "INSERT INTO PLANET(Username, Password, Money, IsBanned, CName)" + 
         "VALUES ('MinaKindo', 'jesuisgentille', 200000, 0, 'NA')"
         };         
                         

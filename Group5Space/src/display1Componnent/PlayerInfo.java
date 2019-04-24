@@ -1,3 +1,4 @@
+package display1Componnent;
 import javax.swing.*;
 
 import display1Componnent.BuildingsPanel;
@@ -11,21 +12,26 @@ import java.awt.event.*;
  *
  */
 
-public class Display1 extends JFrame  {
+public class PlayerInfo extends JFrame  {
   
   //buttons for buildings
+  String username;
   private BuildingsPanel buildings; 
 
   //buttons for player and actions
   private JButton playerInfoButton;
   private JButton playerMoneyButton;
   
-	public Display1() {
+	public PlayerInfo(String username) {
+	  
+	  this.username = username;
+	  
 		JFrame displayFrame = new JFrame("Display 1");
 		
 		displayFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		displayFrame.setSize(800, 800);
 		displayFrame.setLocationRelativeTo(null);
+		
 		// Create a BorderLayout manager.
     displayFrame.setLayout(new BorderLayout());
     buildings = new BuildingsPanel();
@@ -64,7 +70,7 @@ public class Display1 extends JFrame  {
 	 */
   private String getPlayerInfo() {
     // TODO Auto-generated method stub
-    return "playerMina";
+    return username;
   }
   
   /**
