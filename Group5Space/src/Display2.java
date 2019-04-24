@@ -1,25 +1,8 @@
-import java.awt.Dimension;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.CallableStatement;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.NClob;
-import java.sql.PreparedStatement;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
-import java.sql.SQLClientInfoException;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.SQLXML;
-import java.sql.Savepoint;
 import java.sql.Statement;
-import java.sql.Struct;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.Executor;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -34,17 +17,18 @@ import javax.swing.JScrollPane;
 
 public class Display2 {
 
-	
 	private ArrayList<String> players;
-	
+	private DefaultListModel<String> model;
+	private JList<String> list;
+	private JFrame displayFrame;
+
 	public Display2() throws Exception {
-		JFrame displayFrame = new JFrame("Display 2");
+		displayFrame = new JFrame("Display 2");
 		JPanel mainPanel = new JPanel();
-	
+
 		JButton testButton = new JButton("Test");
 		mainPanel.add(testButton);
 		mainPanel = initPopPanel();
-		
 
 		displayFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		displayFrame.setSize(800, 800);
@@ -55,32 +39,77 @@ public class Display2 {
 	}
 
 	private JPanel initPopPanel() throws Exception {
-		
+		/*
+		 * Initialize variables
+		 */
 		JPanel tempPanel = new JPanel();
+		players = new ArrayList<>();
+		model = new DefaultListModel<>();
 
+		/*
+		 * Statement to return names
+		 */
 		Statement stmt = SpaceController.dbConnection.createStatement();
-		String getNames = new String("SELECT * FROM csc371_02.PLAYER;");
+		String getNames = new String("CALL csc371_02.getPlayerNames();"); // StoredProcedure to retrieve player Names
 		ResultSet rs = stmt.executeQuery(getNames);
-		
+
+		/*
+		 * Populate array list with names retrieved
+		 */
 		while (rs.next()) {
-			players.add(rs.getString(1));
+			addPlayer(rs.getString(1));
 		}
-		
-		DefaultListModel<String> playerListModel = new DefaultListModel<>();
-		
+
 		for (int i = 0; i < players.size(); i++) {
-			playerListModel.addElement(players.get(i));
+			model.addElement(players.get(i));
 		}
-		JList<String> jlist = new JList<String>(playerListModel);
-		
-		JScrollPane listScroller = new JScrollPane(jlist);
-		listScroller.setPreferredSize(new Dimension(250, 80));
-		
-		
-		
-		
+
+		list = new JList<String>(model);
+
+		JScrollPane listScroller = new JScrollPane(list);
+
+		/*
+		 * Adding Buttons
+		 */
+		JButton accept = acceptButton();
+		JButton cancel = cancelButton();
+
+		/*
+		 * Adding Elements to the panel
+		 */
 		tempPanel.add(listScroller);
+		tempPanel.add(accept);
+		tempPanel.add(cancel);
 		return tempPanel;
 
+	}
+
+	private JButton acceptButton() {
+		JButton button = new JButton("Send Message");
+
+		return button;
+	}
+
+	private JButton cancelButton() {
+		JButton button = new JButton("Cancel");
+
+		button.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				displayFrame.dispose();
+
+			}
+		});
+
+		return button;
+	}
+
+	public ArrayList<String> getPlayers() {
+		return players;
+	}
+
+	public void addPlayer(String name) {
+		this.players.add(name);
 	}
 }
