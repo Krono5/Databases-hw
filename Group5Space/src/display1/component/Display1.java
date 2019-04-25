@@ -30,10 +30,10 @@ public class Display1 extends JFrame {
   public Display1() {
     // Display a title.
     setTitle("User Login");
-    setSize(800, 800);
+    setPreferredSize(new Dimension(400, 400));
     setLocationRelativeTo(null);
     // Specify an action for the close button.
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setLayout(new GridLayout(3,1));
     //create login button
     loginButton = new JButton("Enter");
