@@ -1,32 +1,20 @@
-import java.awt.Dimension;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.CallableStatement;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.NClob;
-import java.sql.PreparedStatement;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.ResultSet;
-import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.SQLXML;
-import java.sql.Savepoint;
 import java.sql.Statement;
-import java.sql.Struct;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.Executor;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 /*
  * 
@@ -34,53 +22,198 @@ import javax.swing.JScrollPane;
 
 public class Display2 {
 
-	
 	private ArrayList<String> players;
-	
+	private DefaultListModel<String> model;
+	private JList<String> list;
+	private JFrame displayFrame;
+	private String selectedName;
+	private String message;
+
 	public Display2() throws Exception {
-		JFrame displayFrame = new JFrame("Display 2");
+		displayFrame = new JFrame("Display 2");
 		JPanel mainPanel = new JPanel();
-	
+
 		JButton testButton = new JButton("Test");
 		mainPanel.add(testButton);
 		mainPanel = initPopPanel();
-		
 
 		displayFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		displayFrame.setSize(800, 800);
 		displayFrame.setLocationRelativeTo(null);
 
 		displayFrame.add(mainPanel);
+		displayFrame.pack();
 		displayFrame.setVisible(true);
 	}
 
 	private JPanel initPopPanel() throws Exception {
-		
+		/*
+		 * Initialize variables
+		 */
 		JPanel tempPanel = new JPanel();
+		players = new ArrayList<>();
+		model = new DefaultListModel<>();
 
+		/*
+		 * Statement to return names
+		 */
 		Statement stmt = SpaceController.dbConnection.createStatement();
-		String getNames = new String("SELECT * FROM csc371_02.PLAYER;");
+		String getNames = new String("CALL csc371_02.getPlayerNames();"); // StoredProcedure to retrieve player Names
 		ResultSet rs = stmt.executeQuery(getNames);
-		
+
+		/*
+		 * Populate array list with names retrieved
+		 */
 		while (rs.next()) {
-			players.add(rs.getString(1));
+			addPlayer(rs.getString(1));
 		}
 		
-		DefaultListModel<String> playerListModel = new DefaultListModel<>();
 		
 		for (int i = 0; i < players.size(); i++) {
-			playerListModel.addElement(players.get(i));
+			model.addElement(players.get(i));
 		}
-		JList<String> jlist = new JList<String>(playerListModel);
-		
-		JScrollPane listScroller = new JScrollPane(jlist);
-		listScroller.setPreferredSize(new Dimension(250, 80));
-		
-		
-		
-		
+
+		list = new JList<String>(model);
+
+		JScrollPane listScroller = new JScrollPane(list);
+
+		/*
+		 * Adding Buttons
+		 */
+		JButton accept = new JButton("Send Message");
+		JButton cancel = cancelButton();
+
+		/*
+		 * Send message button
+		 */
+		accept.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				selectedName = list.getSelectedValue();
+				sendMessage(selectedName);
+
+			}
+		});
+
+		/*
+		 * Adding Elements to the panel
+		 */
 		tempPanel.add(listScroller);
+		tempPanel.add(accept);
+		tempPanel.add(cancel);
 		return tempPanel;
 
+	}
+
+	private void sendMessage(String playerName) {
+		JFrame messageFrame = new JFrame("Message");
+		JPanel messagePanel = new JPanel();
+		messageFrame.setLocationRelativeTo(null);
+		messageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		JButton send = new JButton("Send Message");
+		JTextArea textArea = new JTextArea("Enter Message...", 5, 1);
+		textArea.setBounds(10, 30, 150, 300);
+		textArea.setSize(150, 300);
+		textArea.setLineWrap(true);
+
+		/*
+		 * Clear default text when user clicks in box
+		 */
+		textArea.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				textArea.setText("");
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+			}
+		});
+
+		/*
+		 * Send Button smarts
+		 */
+		send.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dbSendMessage(playerName, textArea.getText());
+				messageFrame.dispose();
+
+			}
+		});
+
+		messagePanel.add(textArea);
+		messagePanel.add(send);
+		messageFrame.add(messagePanel);
+		messageFrame.pack();
+		messageFrame.setVisible(true);
+	}
+
+	private void dbSendMessage(String playerName, String message) {
+		Statement stmt2;
+		try {
+			stmt2 = SpaceController.dbConnection.createStatement();
+			// String sendMessage = new String("INSERT INTO `csc371_02`.`MESSAGES`
+			// (`P_Username`, `Message`) VALUES ('Player10', 'test');");
+			String sendMessage = new String("CALL csc371_02.sendMessage('" + playerName + "', '" + message + "');"); // StoredProcedure
+																														// to
+																														// send
+																														// Message
+			System.out.println(sendMessage);
+			int rowsAffected = stmt2.executeUpdate(sendMessage);
+
+			if (rowsAffected == 0) {
+				JFrame okFrame = new JFrame();
+				JOptionPane.showMessageDialog(okFrame, "Message Sent");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	private JButton cancelButton() {
+		JButton button = new JButton("Cancel");
+
+		button.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				displayFrame.dispose();
+
+			}
+		});
+
+		return button;
+	}
+
+	public ArrayList<String> getPlayers() {
+		return players;
+	}
+
+	public void addPlayer(String name) {
+		this.players.add(name);
 	}
 }

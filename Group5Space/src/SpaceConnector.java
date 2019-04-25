@@ -12,7 +12,7 @@ public class SpaceConnector{
 	public SpaceConnector() {
 		try {
 			con = DriverManager.getConnection(DB_LOCATION, LOGIN_NAME, PASSWORD);
-			con.setAutoCommit(false); // FOUND ISSUES WHEN NOT USING THIS
+			con.setAutoCommit(true); // FOUND ISSUES WHEN NOT USING THIS
 			System.out.println("Connected to DB");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
