@@ -10,7 +10,11 @@ import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-
+/**
+ * 
+ * @author aa1184
+ *
+ */
 public class BuildingsPanel extends JPanel {
   
   

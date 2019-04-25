@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import display1.component.Display1;
+import display1component.Display1;
 
 
 public class SpaceController {
