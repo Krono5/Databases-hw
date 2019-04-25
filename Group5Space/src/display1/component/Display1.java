@@ -88,7 +88,7 @@ public class Display1 extends JFrame {
         
         System.out.println(username);
         new BuildingsDisplay(username);
-        
+        DBconnect.dbConn.close();
       } catch (SQLException e1) {
         e1.printStackTrace();
         JOptionPane.showMessageDialog(null, usernameTF.getText() + " does not exist ");
