@@ -1,22 +1,40 @@
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class SpaceController {
+import display1.component.Display1;
 
-  
+
+public class SpaceController {
+	
+	public static  SpaceConnector con;
+	public static Connection dbConnection;
+
 	public static void main(String[] args) {
 		JFrame mainFrame = new JFrame("Space Control");
 		mainFrame.setLayout(new BorderLayout());
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		try {
+			con = new SpaceConnector();
+			dbConnection = con.getConnection();
+			System.out.println(dbConnection.getMetaData());
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+		mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		mainFrame.setSize(800, 800);
 		mainFrame.setLocationRelativeTo(null);
 
@@ -34,6 +52,19 @@ public class SpaceController {
 		mainFrame.add(mainPanel, BorderLayout.CENTER);
 		//mainFrame.pack();
 		mainFrame.setVisible(true);
+		mainFrame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				try {
+					dbConnection.close();
+					System.out.println("Database Closed");
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				mainFrame.dispose();
+			}
+		});
 	}
 
 	private static JButton display1() {
@@ -42,7 +73,7 @@ public class SpaceController {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				PlayerInfo display1 = new PlayerInfo();
+				new Display1();
 				
 			}
 		});
@@ -57,7 +88,14 @@ public class SpaceController {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Display2 display = new Display2();
+				
+					try {
+						Display2 display = new Display2();
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				
 				
 			}
 		});
@@ -88,6 +126,10 @@ public class SpaceController {
 			}
 		});
 		return display4;
+	}
+	
+	private void closeConnection() {
+		
 	}
 
 }

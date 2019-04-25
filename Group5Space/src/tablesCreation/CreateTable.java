@@ -62,9 +62,16 @@ public class CreateTable {
  
   public static void main(String[] args) throws Exception {
     
-    String sqlStmt[] = { "INSERT INTO PLANET(Username, Password, Money, IsBanned, CName)" + 
-        "VALUES ('MinaKindo', 'jesuisgentille', 200000, 0, 'NA')"
-        };         
+    
+    String sqlStmt[] = { "INSERT INTO PLANET(P_Username, Planet_ID, Raw_resources, Base_Max_Resources, " + 
+                                            "Total_Max_Resources, Bauble, Factory_Technology, Hull_Technology, "
+                                            + "Mining_Technology, Engine_Technology, Weapon_Technology, "
+                                            + "Num_Factories, Factory_init_cost, Factory_maint_cost, Num_Mines, "
+                                            + "Mine_init_cost, Mine_maint_cost, Num_Shipyards, Shipyard_init_cost, "
+                                            + "Shipyard_maint_cost, Num_Research, Research_init_cost, Research_maint_cost)" + 
+                          "VALUES ('MinaKindo', 'MINA0001', 200000, 200000, "
+                                  + "500000, 10000, 1, 1, 1, 1, 1, 0, 1000, 250, 0,"
+                                  + " 3000, 750, 0, 2500, 625, 0, 5000, 1250)"};         
                         
     for(int i=0; i < sqlStmt.length; i++) {   
       createTable(sqlStmt[i]);

@@ -1,11 +1,12 @@
-package display1Componnent;
+package display1.component;
+
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 /**
  * 
  * @author aa1184 aka MinaKindo
@@ -38,7 +39,6 @@ public class Display1 extends JFrame {
     loginButton = new JButton("Enter");
     loginButton.addActionListener(new LoginActionListener());
     add(loginFields());
-    add(selectionRB());
     add(loginButton);
     
     pack();
@@ -48,8 +48,6 @@ public class Display1 extends JFrame {
   public JPanel loginFields() {
     
     JLabel usernameLabel;             
-    JTextField passwordTF;    
-    JLabel passwordLabel; 
     JPanel panel = new JPanel();
     
     panel.setLayout(new GridLayout(2,2));
@@ -57,47 +55,13 @@ public class Display1 extends JFrame {
     usernameLabel = new JLabel("Username: ");
     usernameTF = new JTextField(5);
     
-    // Create a label to display instructions.
-    passwordLabel = new JLabel("Password: ");
-    passwordTF = new JTextField(5);
-    
     //add components to panel
     panel.add(usernameLabel);
     panel.add(usernameTF);
-    panel.add(passwordLabel);
-    panel.add(passwordTF);
     
     return panel;  
   }
   
-  public JPanel selectionRB() {
-    
-    JPanel panel = new JPanel();
-    
-    ButtonGroup selection;
-    JRadioButton playerRB;
-    JRadioButton adminRB;
-    JRadioButton newUserRB;
-    
-    panel.setLayout(new GridLayout(3,1));
-    
-    //Create Radio Button   
-    playerRB = new JRadioButton("I am a PLAYER", true);
-    newUserRB = new JRadioButton("I am an ADMIN");
-    adminRB = new JRadioButton("NEW USER");
-    selection = new ButtonGroup();
-    
-    selection.add(playerRB);
-    selection.add(adminRB);
-    selection.add(newUserRB);
-    
-    //add components to panel
-    panel.add(playerRB);
-    panel.add(adminRB);
-    panel.add(newUserRB);
-    
-    return panel;  
-  }
   
   private class LoginActionListener implements ActionListener {
 
@@ -110,7 +74,7 @@ public class Display1 extends JFrame {
         String username = usernameTF.getText();
         PreparedStatement stmt;
         DBconnect.connector();
-        stmt = DBconnect.m_dbConn.prepareStatement(sql);
+        stmt = DBconnect.dbConn.prepareStatement(sql);
         
         stmt.setString(1, username);
         ResultSet rs = stmt.executeQuery();
@@ -123,9 +87,9 @@ public class Display1 extends JFrame {
         
         
         System.out.println(username);
-        new PlayerInfo(username);
+        new BuildingsDisplay(username);
+        
       } catch (SQLException e1) {
-        // TODO Auto-generated catch block
         e1.printStackTrace();
         JOptionPane.showMessageDialog(null, usernameTF.getText() + " does not exist ");
       }
