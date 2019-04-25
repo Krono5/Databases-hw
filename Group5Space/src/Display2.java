@@ -1,6 +1,9 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -8,8 +11,10 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 /*
  * 
@@ -21,6 +26,8 @@ public class Display2 {
 	private DefaultListModel<String> model;
 	private JList<String> list;
 	private JFrame displayFrame;
+	private String selectedName;
+	private String message;
 
 	public Display2() throws Exception {
 		displayFrame = new JFrame("Display 2");
@@ -31,10 +38,10 @@ public class Display2 {
 		mainPanel = initPopPanel();
 
 		displayFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		displayFrame.setSize(800, 800);
 		displayFrame.setLocationRelativeTo(null);
 
 		displayFrame.add(mainPanel);
+		displayFrame.pack();
 		displayFrame.setVisible(true);
 	}
 
@@ -59,7 +66,9 @@ public class Display2 {
 		while (rs.next()) {
 			addPlayer(rs.getString(1));
 		}
-
+		
+		stmt.close();
+		
 		for (int i = 0; i < players.size(); i++) {
 			model.addElement(players.get(i));
 		}
@@ -71,8 +80,21 @@ public class Display2 {
 		/*
 		 * Adding Buttons
 		 */
-		JButton accept = acceptButton();
+		JButton accept = new JButton("Send Message");
 		JButton cancel = cancelButton();
+
+		/*
+		 * Send message button
+		 */
+		accept.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				selectedName = list.getSelectedValue();
+				sendMessage(selectedName);
+
+			}
+		});
 
 		/*
 		 * Adding Elements to the panel
@@ -84,10 +106,94 @@ public class Display2 {
 
 	}
 
-	private JButton acceptButton() {
-		JButton button = new JButton("Send Message");
+	private void sendMessage(String playerName) {
+		JFrame messageFrame = new JFrame("Message");
+		JPanel messagePanel = new JPanel();
+		messageFrame.setLocationRelativeTo(null);
+		messageFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		JButton send = new JButton("Send Message");
+		JTextArea textArea = new JTextArea("Enter Message...", 5, 1);
+		textArea.setBounds(10, 30, 150, 300);
+		textArea.setSize(150, 300);
+		textArea.setLineWrap(true);
 
-		return button;
+		/*
+		 * Clear default text when user clicks in box
+		 */
+		textArea.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				textArea.setText("");
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+			}
+		});
+
+		/*
+		 * Send Button smarts
+		 */
+		send.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dbSendMessage(playerName, textArea.getText());
+				messageFrame.dispose();
+
+			}
+		});
+
+		messagePanel.add(textArea);
+		messagePanel.add(send);
+		messageFrame.add(messagePanel);
+		messageFrame.pack();
+		messageFrame.setVisible(true);
+	}
+
+	private void dbSendMessage(String playerName, String message) {
+		Statement stmt;
+		try {
+			stmt = SpaceController.dbConnection.createStatement();
+			// String sendMessage = new String("INSERT INTO `csc371_02`.`MESSAGES`
+			// (`P_Username`, `Message`) VALUES ('Player10', 'test');");
+			String sendMessage = new String("CALL csc371_02.sendMessage('" + playerName + "', '" + message + "');"); // StoredProcedure
+																														// to
+																														// send
+																														// Message
+			System.out.println(sendMessage);
+			boolean rowsAffected = stmt.execute(sendMessage);
+
+			if (rowsAffected == true) {
+				JFrame okFrame = new JFrame();
+				JOptionPane.showMessageDialog(okFrame, "Message Sent");
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	private JButton cancelButton() {
