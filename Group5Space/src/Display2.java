@@ -67,7 +67,6 @@ public class Display2 {
 			addPlayer(rs.getString(1));
 		}
 		
-		stmt.close();
 		
 		for (int i = 0; i < players.size(); i++) {
 			model.addElement(players.get(i));
@@ -172,9 +171,9 @@ public class Display2 {
 	}
 
 	private void dbSendMessage(String playerName, String message) {
-		Statement stmt;
+		Statement stmt2;
 		try {
-			stmt = SpaceController.dbConnection.createStatement();
+			stmt2 = SpaceController.dbConnection.createStatement();
 			// String sendMessage = new String("INSERT INTO `csc371_02`.`MESSAGES`
 			// (`P_Username`, `Message`) VALUES ('Player10', 'test');");
 			String sendMessage = new String("CALL csc371_02.sendMessage('" + playerName + "', '" + message + "');"); // StoredProcedure
@@ -182,13 +181,12 @@ public class Display2 {
 																														// send
 																														// Message
 			System.out.println(sendMessage);
-			boolean rowsAffected = stmt.execute(sendMessage);
+			int rowsAffected = stmt2.executeUpdate(sendMessage);
 
-			if (rowsAffected == true) {
+			if (rowsAffected == 0) {
 				JFrame okFrame = new JFrame();
 				JOptionPane.showMessageDialog(okFrame, "Message Sent");
 			}
-			stmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
