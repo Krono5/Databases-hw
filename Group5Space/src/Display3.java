@@ -1,123 +1,159 @@
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
-public class Display3  extends JFrame{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	//TODO 
-	//  or instead of doing this all, under BorderLayout, Gridlayout would be better. 
-	//North: Resources as TextLabel, Plant maybe as a text label with buttons around it or a user input
-	//Center: Factories and Shipyards title as an imageLabel. Adding ships, babules, crusiers and cargo on ethier side
-	//as imageButtons with actions.  Display table for them with textLabes but bufferedImages that arrive upon creation of items
-	//East: Resources and Baubles amount as textLabels and then  something to display their values as they are used and updated
+
+public class Display3 {
+
+	
 	JButton textButton, imageButton;
 	static JLabel textLabel;
 	JLabel imageLabel;
-	public static final String[] shipColumns = { "Cargoships", "Cruisers"};
-	public static final String[] factoryColumns = {"Resources", "Baubles"};
-	Object[][] factoryData = { 5, 5};
-	Object[][] shipyardData = { 9,9};
+	private JFrame displayFrame;
+	public static String username;
+	
 
-	public static void main(String[] args) {
+
+	public Display3() throws Exception {
 		
 		
-		JFrame displayFrame = new JFrame("Display 3");
+		displayFrame = new JFrame("Display 3");
 		
 		displayFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		displayFrame.setSize(800, 800);
 		displayFrame.setLocationRelativeTo(null);
 		
 		displayFrame.setLayout(new BorderLayout());
-		//TODO: turn into 2 nested panels one set up from North Center and South, then a border pane for Player and stats
-	
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		JPanel borderPanel = new JPanel(new BorderLayout());
+		//setting Plant Name
 		
-		mainPanel.add("North", northPanel());
-		mainPanel.add("Center", centerPanel());	
-		mainPanel.add("South",southPanel());
-		borderPanel.add(playerStats());
+		//setting userName
+		displayFrame.dataTable();
 	
+	
+        
+        //Create the scroll pane and add the table to it.
+        JScrollPane scrollPane = new JScrollPane(dataTable);
+        displayFrame.add(scrollPane);
+        
+        displayFrame.add(radioButtons);
+	
+
 		
-		displayFrame.add(mainPanel);
-		displayFrame.add("East", borderPanel);
 	
 		displayFrame.setVisible(true);
 		
+	}   
+	
+	public static String getUserName() {
+		  try { 
+		        //Statement to return names
+				Statement stmt = SpaceController.dbConnection.createStatement();
+				String getNames = new String("CALL csc371_02.getPlayerNames();"); // StoredProcedure to retrieve player Names
+				ResultSet rs = stmt.executeQuery(getNames);
+				username = rs.getString(1);
+				        
+              	} catch (SQLException e1) {
+		        e1.printStackTrace();
+		        }
+		  return username;
+	}
+	
+	public static JTable dataTable() {
+		String [] columnNames = {"Resources", "Factories", "Baubles", "Shipyards", "Cargo Ships", "Crusier Ships"};
+		//write out the call to get all the info to fill the JTable
+		Object [][] data = { getResources(), getFactories(), getBaubles(), GetShipyards(), getCargoShips(), getCrusierShips()};
+		//Creating dataTable to show off how many of what a player and planet has
+		JTable dataTable = new JTable(data, columnNames);
+		dataTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
+        dataTable.setFillsViewportHeight(true);
+	}
+	/*
+	 * split window to house the radio buttons 
+	 */
+	public void selectAndBuyWindow() {
+		
+	}
+	
+	/*
+	 * being able to pick which things to buy 
+	 */
+	public static JFrame radioButtons() {
+		String shipStrng = "Ships";
+		String cargoStrng = "Cargo Ships";
+		String crusierStrng = "Crusier Ships";
+		String baublesStrng = "Baubles";
+		
+		JRadioButton shipButton = new JRadioButton(shipStrng);
+		shipButton.setMnemonic(KeyEvent.VK_S);
+	    shipButton.setActionCommand(shipStrng);
+	    shipButton.setSelected(true);
+		
+		JRadioButton cargoButton = new JRadioButton(cargoStrng);
+		cargoButton.setMnemonic(KeyEvent.VK_C);
+	    cargoButton.setActionCommand(cargoStrng);
+	    cargoButton.setSelected(true);
+    
+		JRadioButton cruiserButton = new JRadioButton(crusierStrng);
+		cruiserButton.setMnemonic(KeyEvent.VK_R);
+	    cruiserButton.setActionCommand(crusierStrng);
+	    cruiserButton.setSelected(true);
+	    
+		JRadioButton baublesButton = new JRadioButton(baublesStrng);
+		baublesButton.setMnemonic(KeyEvent.VK_B);
+	    baublesButton.setActionCommand(baublesStrng);
+	    baublesButton.setSelected(true);
+		
+	    
+	    
+	    
+	    return buttons;
+		
+		
+	}
+	
+	/*
+	 *buy and update buttons for the split window 
+	 */
+	public static JButton buyShipsButton() {
+		JButton buyShips = new JButton();
+		
+		return buyShips;
+		
+	}
+	
+	/*
+	 * 
+	 */
+	public static JButton  buyCargoButton() {
+		JButton buyCargoShips = new JButton();
+		
+		
+		return buyCargoShips;
+		
+	}
+	 
+	/*
+	 * 
+	 */
+	public static JButton buyCrusiersButton() {
+		JButton buyCrusiers = new JButton();
+		
+		return buyCrusiers;
+	}
+	
+	/*
+	 * 
+	 */
+	public static JButton buyBaublesButton() {
+		JButton buyBaubles = new JButton();
+		
+		return buyBaubles;
 	}
 
-	
-	/*
-	 * TODO: Turn into a table rather than a grid
-	 */
-	public static JPanel playerStats() {
-		JPanel psPanel = new JPanel(new GridLayout(2,2));
-		JLabel[][] labelArray = new JLabel[2][2];
-		labelArray[0][0] = new JLabel("Resources");
-		labelArray[0][1] = new JLabel("Baubles");
-		labelArray[1][0] = new JLabel("$$$###");
-		labelArray[1][1] = new JLabel("$$$###");
-		for (int r=0;r<2;r++) {
-			for (int c=0;c<2;c++) {
-				psPanel.add(labelArray[r][c]);
-			}
-		}
-		
-		return psPanel;
-	}
-	/*
-	 * Basically just a header panel for the display 
-	 * Maybe there is an easier way to make a header
-	 */
-	public static JPanel northPanel() {
-		JPanel nPanel = new JPanel(new GridLayout(2,1));
-		JLabel[][] labelArray = new JLabel[2][1];
-		labelArray[0][0] = new JLabel("Planet");
-		labelArray[1][0] = new JLabel("Resources");
-		nPanel.add(labelArray[0][0]);
-		nPanel.add(labelArray[1][0]);
-		return nPanel;
-		
-	}
-	
-	/*
-	 * TODO Change Center to do just the Factory 
-	 * TODO Change the south to do just the Shipyard
-	 */
-	public static JPanel centerPanel() {
-		JPanel centerPanel = new JPanel(new GridLayout(9,3));
-		JLabel[][] labelArray = new JLabel[5][3];
-		for (int r=0;r<5;r++) {
-			for (int c=0;c<3;c++) {
-				labelArray[r][c] = new JLabel("(" + r + ":" + c + ")");
-				centerPanel.add(labelArray[r][c]);
-			}
-		}
-	
-		return centerPanel;
-	}
-	/*
-	 * TODO Change Center to do just the Factory 
-	 * TODO Change the south to do just the Shipyard
-	 */
-	public static JPanel southPanel() {
-		JPanel southPanel = new JPanel(new GridLayout(9,3));
-		JLabel[][] labelArray = new JLabel[5][3];
-		for (int r=0;r<5;r++) {
-			for (int c=0;c<3;c++) {
-				labelArray[r][c] = new JLabel("(" + r + ":" + c + ")");
-				southPanel.add(labelArray[r][c]);
-			}
-		}
-	
-		return southPanel;
-	}
 }
