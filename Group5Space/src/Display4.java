@@ -351,7 +351,7 @@ public class Display4 {
 		int colNum = 0;
 		
 		/* Gets the number of columns from a table */
-		String getColNum = new String("SELECT count(*) FROM information_schema.columns WHERE table_name = '" + tableName + "';");
+		String getColNum = new String("SELECT count(*) FROM information_schema.columns WHERE table_name = '" + tableName + "' AND table_schema = 'csc371_02';");
 		ResultSet rs = stmt.executeQuery(getColNum);
 		
 		while(rs.next()) {
@@ -384,7 +384,7 @@ public class Display4 {
 		colNames = new String[colNum];
 		
 		/* Gets all the column names from a table */
-		String getColNames = new String("SELECT * FROM information_schema.columns WHERE table_name = '" + tableName + "';");
+		String getColNames = new String("SELECT * FROM information_schema.columns WHERE table_name = '" + tableName + "' AND table_schema = 'csc371_02';");
 		ResultSet rs = stmt.executeQuery(getColNames);
 	
 		int i=0;
