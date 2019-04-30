@@ -2,6 +2,8 @@ package display1.component;
 
 import javax.swing.*;
 
+import assignment2.SpaceController;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.PreparedStatement;
@@ -93,8 +95,8 @@ public class BuildingsDisplay extends JFrame  {
         String updateMoney = "UPDATE PLAYER SET Money = Money - ? WHERE Username = ?";
        
         PreparedStatement stmt1, stmt2;
-        stmt1 = DBconnect.dbConn.prepareStatement(updateFactory);
-        stmt2 = DBconnect.dbConn.prepareStatement(updateMoney);
+        stmt1 = SpaceController.dbConnection.prepareStatement(updateFactory);
+        stmt2 = SpaceController.dbConnection.prepareStatement(updateMoney);
         
         stmt1.setString(1, username);
         stmt1.setString(2, getPlayerPlanet());
@@ -162,8 +164,7 @@ public class BuildingsDisplay extends JFrame  {
       String sql = "SELECT Money FROM PLAYER WHERE Username = ?";
       String username = getPlayerName();
       PreparedStatement stmt;
-      DBconnect.connector();
-      stmt = DBconnect.dbConn.prepareStatement(sql);
+      stmt = SpaceController.dbConnection.prepareStatement(sql);
       
       stmt.setString(1, username);
       ResultSet rs = stmt.executeQuery();
@@ -189,8 +190,7 @@ public class BuildingsDisplay extends JFrame  {
       String sql = "SELECT Planet_ID FROM PLANET WHERE P_Username = ?";
       String username = getPlayerName();
       PreparedStatement stmt;
-      DBconnect.connector();
-      stmt = DBconnect.dbConn.prepareStatement(sql);
+      stmt = SpaceController.dbConnection.prepareStatement(sql);
       
       stmt.setString(1, username);
       ResultSet rs = stmt.executeQuery();
@@ -215,8 +215,7 @@ public class BuildingsDisplay extends JFrame  {
       String sql = "SELECT " + column + " FROM PLANET WHERE P_Username = ?";
       String username = getPlayerName();
       PreparedStatement stmt;
-      DBconnect.connector();
-      stmt = DBconnect.dbConn.prepareStatement(sql);
+      stmt = SpaceController.dbConnection.prepareStatement(sql);
       
       stmt.setString(1, username);
       ResultSet rs = stmt.executeQuery();

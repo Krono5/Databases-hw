@@ -1,10 +1,11 @@
+package assignment2;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class SpaceConnector{
 	
-	public static final String DB_LOCATION = "jdbc:mysql://db.cs.ship.edu:3306";
+	public static final String DB_LOCATION = "jdbc:mysql://db.cs.ship.edu:3306/csc371_02";
 	public static final String LOGIN_NAME = "csc371_02";
 	public static final String PASSWORD = "Password02";
 	private Connection con = null;

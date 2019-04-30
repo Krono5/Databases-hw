@@ -2,6 +2,7 @@ package display1.component;
 
 import javax.swing.*;
 
+import assignment2.SpaceController;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -86,8 +87,7 @@ public class Display1 extends JFrame {
         String sql = "SELECT Username FROM PLAYER WHERE Username = ?";
         
         //connect to DB
-        DBconnect.connector();
-        PreparedStatement stmt = DBconnect.dbConn.prepareStatement(sql);
+        PreparedStatement stmt = SpaceController.dbConnection.prepareStatement(sql);
               
         stmt.setString(1, username);
         ResultSet rs = stmt.executeQuery();
@@ -104,12 +104,10 @@ public class Display1 extends JFrame {
         }
         
         new BuildingsDisplay(username);
-      //close connection
-        DBconnect.dbConn.close();
          
       } catch (SQLException e1) {
         e1.printStackTrace();
-        JOptionPane.showMessageDialog(null, usernameTF.getText() + " does not exist ");
+        JOptionPane.showMessageDialog(null, "Something bad happenned");
       }
     }
   }

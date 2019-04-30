@@ -1,3 +1,4 @@
+package assignment2;
 /* Imports */
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
