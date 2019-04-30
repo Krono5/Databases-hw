@@ -2,15 +2,18 @@ package display1.component;
 
 import javax.swing.*;
 
+
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 /**
  * 
- * @author aa1184 aka MinaKindo
- *
+ * @author aa1184 
+ *This class is for getting a username in order to display 
+ *the interface to add buildings
  */
 public class Display1 extends JFrame {
   
@@ -19,19 +22,17 @@ public class Display1 extends JFrame {
   
   private JButton loginButton;
   
-  //These three buttons will allow user to 
-  //select the right choice
-  
   
   /*
    * this UI will be the first screen a user will see 
-   * and allows to get to the DB
+   * and allows to get to the different buildings
    */
   public Display1() {
     // Display a title.
     setTitle("User Login");
     setPreferredSize(new Dimension(400, 400));
     setLocationRelativeTo(null);
+    
     // Specify an action for the close button.
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setLayout(new GridLayout(3,1));
@@ -44,7 +45,10 @@ public class Display1 extends JFrame {
     pack();
     setVisible(true);
   }
-  
+  /**
+   * 
+   * @return a p
+   */
   public JPanel loginFields() {
     
     JLabel usernameLabel;             
@@ -62,40 +66,51 @@ public class Display1 extends JFrame {
     return panel;  
   }
   
-  
+  /**
+   * 
+   * Inner class for login button listener
+   *
+   */
   private class LoginActionListener implements ActionListener {
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-      
-      
-      try {
-        String sql = "SELECT Username FROM PLAYER WHERE Username = ?";
-        String username = usernameTF.getText();
-        PreparedStatement stmt;
-        DBconnect.connector();
-        stmt = DBconnect.dbConn.prepareStatement(sql);
+    public void actionPerformed(ActionEvent e) {   
+      try {    
+        //if empty will stop
+        while(usernameTF.getText().trim().length() == 0) {
+          JOptionPane.showMessageDialog(null, "please enter a value");
+          return;
+          }
         
+        String username = usernameTF.getText();
+        String sql = "SELECT Username FROM PLAYER WHERE Username = ?";
+        
+        //connect to DB
+        DBconnect.connector();
+        PreparedStatement stmt = DBconnect.dbConn.prepareStatement(sql);
+              
         stmt.setString(1, username);
         ResultSet rs = stmt.executeQuery();
         
-        while (rs.next())
-        {
-        // You can access values from a ResultSet either by column number - not advised:
-        username = rs.getString("Username");
+        //if username entered is not in DB stop
+        while(!rs.next()) {
+          JOptionPane.showMessageDialog(null, usernameTF.getText() + " does not exist ");
+          return;
+          }
+        
+        //username is in DB 
+        while (rs.next()) {
+          username = rs.getString("Username");
         }
         
-        
-        System.out.println(username);
         new BuildingsDisplay(username);
+      //close connection
         DBconnect.dbConn.close();
+         
       } catch (SQLException e1) {
         e1.printStackTrace();
         JOptionPane.showMessageDialog(null, usernameTF.getText() + " does not exist ");
       }
-        
     }
-
   }
-
 }
