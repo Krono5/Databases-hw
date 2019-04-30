@@ -121,7 +121,12 @@ public class SpaceController {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Display4 display = new Display4();
+				try {
+					Display4 display = new Display4();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				
 			}
 		});
