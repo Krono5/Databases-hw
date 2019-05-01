@@ -15,13 +15,13 @@ import javax.swing.*;
 public class Display3 {
 
 	
-	private static final Component radioScrollPane = null;
-	private static final Component buttonScrollPane = null;
-	JButton textButton, imageButton;
-	static JLabel textLabel;
-	JLabel imageLabel;
-	private JFrame displayFrame, mainFrame;
-	JSplitPane splitPane;
+
+	private JButton textButton, imageButton;
+	private static JLabel textLabel, imageLabel;
+	
+	private JFrame displayFrame;
+	private JPanel  statsFrame, buyFrame;
+	
 
 	public static String username;
 	
@@ -31,38 +31,56 @@ public class Display3 {
 		
 		
 		displayFrame = new JFrame("Display 3");
+		JPanel mainPanel = new JPanel(new BorderLayout());
 		
 		displayFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		displayFrame.setSize(800, 800);
+
 		displayFrame.setLocationRelativeTo(null);
+		JScrollPane radioScrollPane, buttonScrollPane;
+		radioScrollPane = new JScrollPane();
+		buttonScrollPane= new JScrollPane();
 		
-		displayFrame.setLayout(new BorderLayout());
-		mainFrame = new JFrame("Player Stats");
-		mainFrame.setLayout(new BorderLayout());
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, radioScrollPane, buttonScrollPane);
+		Dimension minimumSize = new Dimension(400, 400);
+		splitPane.setOneTouchExpandable(true);
+		splitPane.setDividerLocation(400);
+		radioScrollPane.setMinimumSize(minimumSize);
+		buttonScrollPane.setMinimumSize(minimumSize);
+		radioScrollPane.add(radioButtons());
+		//mainPanel.add("Center",dataTable());
+		mainPanel.add("Center",splitPane);
+		//mainPanel.add("South",radioButtons());
 		
-		//setting Plant Name
-		
-	    mainFrame.add(dataTable(), BorderLayout.CENTER);   
-	    mainFrame.add(buyShipsButton(), BorderLayout.EAST);
-	    mainFrame.add(buyCargoButton(), BorderLayout.EAST);
-	    mainFrame.add(buyCrusiersButton(), BorderLayout.EAST);
-	    mainFrame.add(buyBaublesButton(), BorderLayout.EAST);
-        //Create the scroll pane and add the table to it.
-        JScrollPane scrollPane = new JScrollPane(dataTable());
-        
-        mainFrame.add(scrollPane);
-        mainFrame.pack();
-        
-        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, radioScrollPane, buttonScrollPane);
-        Dimension minimumSize = new Dimension(100, 50);
-        radioScrollPane.setMinimumSize(minimumSize);
-        buttonScrollPane.setMinimumSize(minimumSize);
-        
-        displayFrame.add(radioButtons(), BorderLayout.SOUTH);
-        
-     
-    
+		/*
+		 * mainPanel.setSize(800,800); mainPanel.setLayout(new BorderLayout());
+		 * 
+		 * 
+		 * statsFrame = new JPanel(); statsFrame.setSize(400,400); buyFrame = new
+		 * JPanel(); buyFrame.setSize(400,400);
+		 * 
+		 * JScrollPane radioScrollPane = new JScrollPane(); JScrollPane
+		 * buttonScrollPane= new JScrollPane(); splitPane = new
+		 * JSplitPane(JSplitPane.HORIZONTAL_SPLIT, radioScrollPane, buttonScrollPane);
+		 * Dimension minimumSize = new Dimension(100, 50);
+		 * radioScrollPane.setMinimumSize(minimumSize);
+		 * buttonScrollPane.setMinimumSize(minimumSize);
+		 * 
+		 * radioScrollPane.add(radioButtons());
+		 * 
+		 * 
+		 * buttonScrollPane.add(buyShipsButton());
+		 * buttonScrollPane.add(buyCargoButton());
+		 * buttonScrollPane.add(buyCrusiersButton());
+		 * buttonScrollPane.add(buyBaublesButton());
+		 * 
+		 * statsFrame.add(dataTable()); buyFrame.add(splitPane);
+		 * mainPanel.add(statsFrame); mainPanel.add(buyFrame);
+		 */
+	    
+	    displayFrame.add(mainPanel);
+	    displayFrame.pack();
 		displayFrame.setVisible(true);
+	
 		
 	}   
 	
@@ -80,29 +98,26 @@ public class Display3 {
 		  return username;
 	}
 	
-	public static JTable dataTable() {
-		String [] columnNames = {"Resources", "Factories", "Baubles", "Shipyards", "Cargo Ships", "Crusier Ships"};
+	private JTable dataTable() {
+		String [] columnNames = {"Resources12", "Factories21", "Bauble12s", "Shipyards12", "Cargo Ships12", "Crusier Ships12"};
 		//write out the call to get all the info to fill the JTable
 		//Object [][] data = { getResources(), getFactories(), getBaubles(), GetShipyards(), getCargoShips(), getCrusierShips()};
-		Object [][] data = { null, null, null, null, null, null,};
+		Object [][] data = {{"Resources", "Factories", "Baubles", "Shipyards", "Cargo Ships", "Crusier Ships"},
+				{"Resources", "Factories", "Baubles", "Shipyards", "Cargo Ships", "Crusier Ships"} };
 		//Creating dataTable to show off how many of what a player and planet has
 		JTable dataTable = new JTable(data, columnNames);
-		dataTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
-        dataTable.setFillsViewportHeight(true);
+		dataTable.setPreferredScrollableViewportSize(new Dimension(150, 70));
+        dataTable.setFillsViewportHeight(false);
+        dataTable.setVisible(true);
         
         return dataTable;
 	}
-	/*
-	 * split window to house the radio buttons 
-	 */
-	public void selectAndBuyWindow() {
-		
-	}
+
 	
 	/*
 	 * being able to pick which things to buy 
 	 */
-	public static JPanel radioButtons() {
+	private JPanel radioButtons() {
 		String shipStrng = "Ships";
 		String cargoStrng = "Cargo Ships";
 		String crusierStrng = "Crusier Ships";

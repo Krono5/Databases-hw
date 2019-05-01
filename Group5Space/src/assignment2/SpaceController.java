@@ -109,7 +109,12 @@ public class SpaceController {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Display3 display = new Display3();
+				try {
+					Display3 display = new Display3();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				
 			}
 		});
