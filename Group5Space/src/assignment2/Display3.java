@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -15,47 +16,114 @@ import javax.swing.*;
 
 public class Display3 {
 
-	
- 
-	private JButton textButton, imageButton;
-	private static JLabel textLabel, imageLabel;
-	private JFrame displayFrame;
-	private JPanel  statsFrame, buyFrame;
-	
+
 
 	public static String username;
 	
 	static JTable dataTable;
-	static JScrollPane header;
+	static JScrollPane header;	
+	private ArrayList<String> players;
+	private DefaultListModel<String> model;
+	private JList<String> list;
+	private static JFrame displayFrame;
+
+	JFrame showData;
+
+	private static JPanel southPanel;
+	private String selectedName;
 
 	public Display3 () throws Exception {
 		
 		
 		displayFrame = new JFrame("Display 3");
 		JPanel mainPanel = new JPanel(new BorderLayout());
-		JPanel southPanel = new JPanel();
-		header = new JScrollPane();
+		
 		displayFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		displayFrame.setLocationRelativeTo(null);
-		refreshValues();
 		
-		JLabel playerName = new JLabel(getUserName());
 		
-		mainPanel.add("North", playerName);
-		mainPanel.add("Center",header);
-		mainPanel.add("South",southPanel);
+		
+		
+		mainPanel.add(initPopPanel());
 
-		southPanel.add(buyCargoButton());
-		southPanel.add(buyCrusiersButton());
-		southPanel.add(buyBaublesButton());
 	    displayFrame.add(mainPanel);
 	    displayFrame.pack();
 		displayFrame.setVisible(true);
 	
 		
 	}   
+	private JPanel initPopPanel() throws Exception {
+		
+		JPanel tempPanel = new JPanel();
+		players = new ArrayList<>();
+		model = new DefaultListModel<>();
+
+		Statement stmt = SpaceController.dbConnection.createStatement();
+		String getNames = new String("CALL csc371_02.getPlayerNames();"); // StoredProcedure to retrieve player Names
+		ResultSet rs = stmt.executeQuery(getNames);
+
+		while (rs.next()) {
+			addPlayer(rs.getString(1));
+		}
+		
+		
+		for (int i = 0; i < players.size(); i++) {
+			model.addElement(players.get(i));
+		}
+
+		list = new JList<String>(model);
+
+		JScrollPane listScroller = new JScrollPane(list);
+
+		JButton select = new JButton("Select");
+			select.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				selectedName = list.getSelectedValue();
+				showData(selectedName);
+			
+
+			}
+		});
+
+		tempPanel.add(listScroller);
+		tempPanel.add(select);
+		
+		return tempPanel;
+
+	}
 	
+	public ArrayList<String> getPlayers() {
+		return players;
+	}
+
+	public void addPlayer(String name) {
+		this.players.add(name);
+	}
+
+	
+	public static JFrame showData(String selectedName) {
+		
+		JFrame showData = new JFrame("Player Data");
+		JPanel dataPanel = new JPanel(new BorderLayout());
+		JLabel playerName = new JLabel(selectedName);
+		JPanel southPanel = new JPanel();
+		header = new JScrollPane();
+		refreshValues(selectedName);
+		dataPanel.add("North", playerName);
+		dataPanel.add("Center",header);
+		dataPanel.add("South",southPanel);
+
+		southPanel.add(buyCargoButton(selectedName));
+		southPanel.add(buyCrusiersButton(selectedName));
+		southPanel.add(buyBaublesButton(selectedName));
+		showData.add(dataPanel);
+		showData.pack();
+		showData.setVisible(true);
+		return showData;
+	}
 	
 	
 	public static String getUserName() {
@@ -105,7 +173,7 @@ public class Display3 {
         return dataTable;
 	}
 
-	public static void refreshValues() {
+	public static void refreshValues(String selectedName) {
 		int resourceValue = -1;
 		int factoriesValue = -1;
 		int baublesValue = -1;
@@ -115,7 +183,7 @@ public class Display3 {
 		Statement stmt;
 		try {
 			stmt = SpaceController.dbConnection.createStatement();
-			String getValues= new String("CALL csc371_02.getValues();"); // StoredProcedure to retrieve player Names
+			String getValues= new String("CALL csc371_02.getValues('" + selectedName +"');"); // StoredProcedure to retrieve player Names
 			ResultSet rs = stmt.executeQuery(getValues);
 			while (rs.next()) {
 				resourceValue = rs.getInt(1);
@@ -141,7 +209,7 @@ public class Display3 {
 	/*
 	 * 
 	 */
-	public static JButton  buyCargoButton() {
+	public static JButton  buyCargoButton(String selectedName) {
 		JButton buyCargoShips = new JButton("Buy a Cargo Ship");
 		
 		  buyCargoShips.addActionListener(new ActionListener() {
@@ -150,9 +218,9 @@ public class Display3 {
 				  Statement stmt;
 				  try {
 				  stmt = SpaceController.dbConnection.createStatement();
-					String buyCargo = new String("CALL csc371_02.buyCargo();"); // StoredProcedure to retrieve player Names
+					String buyCargo = new String("CALL csc371_02.buyCargo('" + selectedName + "');"); // StoredProcedure to retrieve player Names
 					stmt.execute(buyCargo);
-				  refreshValues();
+				  refreshValues(selectedName);
 			  	} catch (SQLException el){
 			  		el.printStackTrace();
 			  	}
@@ -166,7 +234,7 @@ public class Display3 {
 	/*
 	 * 
 	 */
-	public static JButton buyCrusiersButton() {
+	public static JButton buyCrusiersButton(String selectedName) {
 		JButton buyCrusiers = new JButton("Buy a Cruiser Ship");
 		
 		
@@ -176,9 +244,9 @@ public class Display3 {
 			  Statement stmt;
 			  try {
 				  stmt = SpaceController.dbConnection.createStatement();
-					String buyCrusiers = new String("CALL csc371_02.buyCrusiers();"); // StoredProcedure to retrieve player Names
+					String buyCrusiers = new String("CALL csc371_02.buyCrusiers('" + selectedName + "');"); // StoredProcedure to retrieve player Names
 					stmt.execute(buyCrusiers);
-				  refreshValues();				  
+				  refreshValues(selectedName);				  
 			  }catch (SQLException el){
 				  el.printStackTrace();
 				  }
@@ -191,7 +259,7 @@ public class Display3 {
 	/*
 	 * 
 	 */
-	public static JButton buyBaublesButton() {
+	public static JButton buyBaublesButton(String selectedName) {
 		JButton buyBaubles = new JButton("Buy Baubles");
 		
 		  buyBaubles.addActionListener(new ActionListener() {
@@ -200,9 +268,9 @@ public class Display3 {
 				  Statement stmt;
 				  try {
 					  stmt = SpaceController.dbConnection.createStatement();
-						String buyBaubles = new String("CALL csc371_02.buyBaubles();"); // StoredProcedure to retrieve player Names
+						String buyBaubles = new String("CALL csc371_02.buyBaubles('" + selectedName +"');"); // StoredProcedure to retrieve player Names
 						stmt.execute(buyBaubles);
-					  refreshValues();				  
+					  refreshValues(selectedName);				  
 				  }catch (SQLException el){
 					  el.printStackTrace();
 					  }
