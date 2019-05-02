@@ -40,12 +40,12 @@ public class Display3 {
 		displayFrame.setLocationRelativeTo(null);
 		refreshValues();
 		
-		//JLabel userName = new JLabel(getUserName());
+		JLabel playerName = new JLabel(getUserName());
 		
-		//mainPanel.add("North", userName);
+		mainPanel.add("North", playerName);
 		mainPanel.add("Center",header);
 		mainPanel.add("South",southPanel);
-		southPanel.add(buyShipsButton());
+
 		southPanel.add(buyCargoButton());
 		southPanel.add(buyCrusiersButton());
 		southPanel.add(buyBaublesButton());
@@ -56,15 +56,21 @@ public class Display3 {
 		
 	}   
 	
+	
+	
 	public static String getUserName() {
 		  try { 
 		        //Statement to return names
 				Statement stmt = SpaceController.dbConnection.createStatement();
 				String getNames = new String("CALL csc371_02.getPlayerNames();"); // StoredProcedure to retrieve player Names
 				ResultSet rs = stmt.executeQuery(getNames);
+				
+				while(rs.next()) {
 				username = rs.getString(1);
+				break;
 				        
-              	} catch (SQLException e1) {
+              	}
+		  }catch (SQLException e1) {
 		        e1.printStackTrace();
 		        }
 		  return username;
@@ -130,30 +136,7 @@ public class Display3 {
 		
 	
 	}
-	/*
-	 *buy and update buttons for the split window 
-	 */
-	public static JButton buyShipsButton() {
-		JButton buyShips = new JButton("Buy a Ship");
-		
-		  buyShips.addActionListener(new ActionListener() {
-		  
-		  @Override public void actionPerformed(ActionEvent e) { 
-			  Statement stmt;
-			  try {
-			  stmt = SpaceController.dbConnection.createStatement();
-				String buyCargo = new String("CALL csc371_02.buyCargo();"); // StoredProcedure to retrieve player Names
-				stmt.execute(buyCargo);
-			  refreshValues();
-		  	} catch (SQLException el){
-		  		el.printStackTrace();
-		  	}
-		  }
-		  });
-		 
-		return buyShips;
-		
-	}
+
 	
 	/*
 	 * 
@@ -161,14 +144,21 @@ public class Display3 {
 	public static JButton  buyCargoButton() {
 		JButton buyCargoShips = new JButton("Buy a Cargo Ship");
 		
-		
-/*		  buyCargoShips.addActionListener(new ActionListener() {
-		  
-		  @Override public void actionPerformed(ActionEvent e) { selectedName =
-		  list.getSelectedValue(); sendMessage(selectedName);
-		  
-		  }
-		 */
+		  buyCargoShips.addActionListener(new ActionListener() {
+			  
+			  @Override public void actionPerformed(ActionEvent e) { 
+				  Statement stmt;
+				  try {
+				  stmt = SpaceController.dbConnection.createStatement();
+					String buyCargo = new String("CALL csc371_02.buyCargo();"); // StoredProcedure to retrieve player Names
+					stmt.execute(buyCargo);
+				  refreshValues();
+			  	} catch (SQLException el){
+			  		el.printStackTrace();
+			  	}
+			  };
+		  });  
+			 
 		return buyCargoShips;
 		
 	}
@@ -180,12 +170,20 @@ public class Display3 {
 		JButton buyCrusiers = new JButton("Buy a Cruiser Ship");
 		
 		
-/*		  buyCrusiers.addActionListener(new ActionListener() {
+	  buyCrusiers.addActionListener(new ActionListener() {
 		  
-		  @Override public void actionPerformed(ActionEvent e) { selectedName =
-		  list.getSelectedValue(); sendMessage(selectedName);
-		  
-		  }*/
+		  @Override public void actionPerformed(ActionEvent e) { 
+			  Statement stmt;
+			  try {
+				  stmt = SpaceController.dbConnection.createStatement();
+					String buyCrusiers = new String("CALL csc371_02.buyCrusiers();"); // StoredProcedure to retrieve player Names
+					stmt.execute(buyCrusiers);
+				  refreshValues();				  
+			  }catch (SQLException el){
+				  el.printStackTrace();
+				  }
+		  }
+	  });
 		 
 		return buyCrusiers;
 	}
@@ -194,15 +192,23 @@ public class Display3 {
 	 * 
 	 */
 	public static JButton buyBaublesButton() {
-		JButton buyBaubles = new JButton("Buy more Baubles");
+		JButton buyBaubles = new JButton("Buy Baubles");
 		
-/*		  buyBaubles.addActionListener(new ActionListener() {
-	  
-		  @Override public void actionPerformed(ActionEvent e) { selectedName =
-		  list.getSelectedValue(); sendMessage(selectedName);
-		  
-		  }
-		 */
+		  buyBaubles.addActionListener(new ActionListener() {
+			  
+			  @Override public void actionPerformed(ActionEvent e) { 
+				  Statement stmt;
+				  try {
+					  stmt = SpaceController.dbConnection.createStatement();
+						String buyBaubles = new String("CALL csc371_02.buyBaubles();"); // StoredProcedure to retrieve player Names
+						stmt.execute(buyBaubles);
+					  refreshValues();				  
+				  }catch (SQLException el){
+					  el.printStackTrace();
+					  }
+			  }
+		  });
+		 
 		return buyBaubles;
 	}
 		  
