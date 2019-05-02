@@ -28,8 +28,7 @@ public class Display2 {
 	private JList<String> list;
 	private JFrame displayFrame;
 	private String selectedName;
-	private String message;
-
+	
 	public Display2() throws Exception {
 		displayFrame = new JFrame("Display 2");
 		JPanel mainPanel = new JPanel();
@@ -184,7 +183,7 @@ public class Display2 {
 			System.out.println(sendMessage);
 			int rowsAffected = stmt2.executeUpdate(sendMessage);
 
-			if (rowsAffected == 0) {
+			if (rowsAffected == 1) {
 				JFrame okFrame = new JFrame();
 				JOptionPane.showMessageDialog(okFrame, "Message Sent");
 			}
