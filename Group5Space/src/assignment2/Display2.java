@@ -18,7 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 /*
- * 
+ * author: Tyler Storr
  */
 
 public class Display2 {

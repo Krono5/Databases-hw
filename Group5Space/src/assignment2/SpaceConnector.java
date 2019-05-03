@@ -3,6 +3,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * author: Tyler Storr
+ */
 public class SpaceConnector{
 	
 	public static final String DB_LOCATION = "jdbc:mysql://db.cs.ship.edu:3306/csc371_02";

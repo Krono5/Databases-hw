@@ -14,6 +14,9 @@ import javax.swing.JPanel;
 
 import display1.component.Display1;
 
+/**
+ * author: Tyler Storr
+ */
 
 public class SpaceController {
 	
